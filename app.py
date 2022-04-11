@@ -27,7 +27,6 @@ def add_image_to_audio(export_path, audio_path, image_path):
     # create the new video with black bars and the video created earlier
     black_bars = mpy.ImageClip("./assets/black_bars1280x720.jpg")
     new_video = mpy.CompositeVideoClip([black_bars, exported_resized.set_position("center")])
-    #new_video.duration = exported.duration
     new_video = new_video.set_end(exported.duration - 0.2)
     new_video.fps = 1
     print(new_video.duration)
