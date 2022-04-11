@@ -16,7 +16,7 @@ def add_image_to_audio(export_path):
     video_clip = image_clip.set_audio(audio_clip)
     video_clip.duration = audio_clip.duration
     video_clip.fps = 1
-    video_clip.write_videofile(filename = temp_path, codec = "mpeg4", logger = None)#ffmpeg_params = ["-s", "1280x720"]
+    video_clip.write_videofile(filename = temp_path, codec = "libx264", logger = None)#ffmpeg_params = ["-s", "1280x720"]
     
     # get the exported video from above and resize it to fit the black bars height
     print("Resizing to 1280x720...")
@@ -31,7 +31,7 @@ def add_image_to_audio(export_path):
 
     split_path = audio_path.split("\\")
     name = split_path[len(split_path) - 1].split(".")[0]
-    new_video.write_videofile(export_path + "\\" + name + ".mp4", codec = "mpeg4", logger = None)
+    new_video.write_videofile(export_path + "\\" + name + ".mp4", codec = "libx264", logger = None)
     os.remove(temp_path)
 
     print()
