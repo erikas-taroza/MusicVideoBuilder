@@ -7,7 +7,7 @@ from google.oauth2.credentials import Credentials
 
 privacyOptions = ("public", "unlisted", "private")
 
-def get_service():
+def get_service() -> Credentials:
     try:
         creds: Credentials = None
         with open("./assets/credentials.pickle", "rb") as creds_file:
