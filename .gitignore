@@ -1,4 +1,7 @@
 export_path.txt
+client.json
+credentials.pickle
+tags.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

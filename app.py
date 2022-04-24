@@ -1,8 +1,9 @@
 import moviepy.editor as mpy
+import youtube_api as yt
 import os
 
 temp_path = "./assets/temp.mp4"
-data_path = "./export_path.txt"
+data_path = "./assets/export_path.txt"
 
 def add_image_to_audio(export_path, audio_path, image_path):
     print()
@@ -29,7 +30,6 @@ def add_image_to_audio(export_path, audio_path, image_path):
     new_video = mpy.CompositeVideoClip([black_bars, exported_resized.set_position("center")])
     new_video = new_video.set_end(exported.duration - 0.2)
     new_video.fps = 1
-    print(new_video.duration)
 
     split_path = audio_path.split("\\")
     name = split_path[len(split_path) - 1].split(".")[0]
@@ -41,9 +41,21 @@ def add_image_to_audio(export_path, audio_path, image_path):
     exported_resized.close()
     os.remove(temp_path)
 
-    print()
     print("Exported: " + export_path)
-    input("Press ENTER to close...")
+    print()
+    return export_path + name + ".mp4"
+
+def create_video(export_path, audio_path, image_path):
+    video_path = add_image_to_audio(export_path, audio_path, image_path)  
+    
+    upload = None
+    while upload != "y" or upload != "n":
+        upload = input("Upload to YouTube? (y/n): ").strip().lower()
+        if upload == "n":
+            return
+        elif upload == "y":
+            yt.upload_exported_video(video_path, yt.get_args())
+            break
 
 def run():
     export_path = ""
@@ -51,7 +63,7 @@ def run():
         file = open(data_path, "r")
         export_path = file.readline()
     except:
-        path = input("Enter file path for all exports: ")
+        path = input("Enter file path for all exports (path must end with slash): ")
         file = open(data_path, "w")
         file.write(path.replace("\"", ""))
         file.close()
@@ -60,7 +72,8 @@ def run():
     audio_path = input("Enter file path of audio: ").replace("\"", "")
     image_path = input("Enter file path of image: ").replace("\"", "")
     if audio_path != "" and image_path != "":
-        add_image_to_audio(export_path, audio_path, image_path)
+        create_video(export_path, audio_path, image_path)
+        input("Press ENTER to close...")
 
 if __name__ == "__main__":
     run()
