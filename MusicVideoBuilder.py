@@ -54,8 +54,7 @@ def create_video(export_path, audio_path, image_path):
         if upload == "n":
             return
         elif upload == "y":
-            #yt.upload_exported_video(video_path, yt.get_args())
-            yt.get_args()
+            yt.upload_exported_video(video_path, yt.get_args())
             break
 
 def run():
