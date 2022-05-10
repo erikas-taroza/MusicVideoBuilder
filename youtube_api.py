@@ -56,14 +56,25 @@ def get_args() -> dict:
     print()
     _title = input("Title: ")
     _description = input("Description: ")
-    _tags = input("Tags (tag1,tag2,tag3): ")
     _privacy = int(input("Privacy (Public[0], Unlisted[1], Private[2]): "))
 
-    default_tags = open("./assets/tags.txt", "r").read()
+    _tags = []
+    tags_file = open("./assets/config.txt", "r")
+    tags_file_data = tags_file.readlines()[2:]
+    for tag in tags_file_data:
+        _tags.append(tag.strip())
+
+    tags_file.close()
+
+    input_tag = input("Tags (Press ENTER to add a new tag. Press ENTER on an empty line to stop.):\n").strip()
+    while input_tag != "":
+        if input_tag not in _tags:
+            _tags.append(input_tag)
+        input_tag = input("").strip()
 
     return dict(
         title = _title,
         description = _description,
-        tags = (_tags + default_tags).split(","),
+        tags = _tags,
         privacy = _privacy
     )

@@ -3,7 +3,7 @@ import youtube_api as yt
 import os
 
 temp_path = "./assets/temp.mp4"
-data_path = "./assets/export_path.txt"
+data_path = "./assets/config.txt"
 
 def add_image_to_audio(export_path, audio_path, image_path):
     print()
@@ -54,18 +54,33 @@ def create_video(export_path, audio_path, image_path):
         if upload == "n":
             return
         elif upload == "y":
-            yt.upload_exported_video(video_path, yt.get_args())
+            #yt.upload_exported_video(video_path, yt.get_args())
+            yt.get_args()
             break
 
 def run():
-    export_path = ""
-    try:
-        file = open(data_path, "r")
-        export_path = file.readline()
-    except:
-        path = input("Enter file path for all exports (path must end with slash): ")
+    global export_path
+
+    file = open(data_path, "r")
+    file_data = file.readlines()
+    file.close()
+
+    path_from_data = file_data[0].split("=")[1].strip()
+
+    if path_from_data != "" and "Export" in file_data[0]:
+        export_path = path_from_data
+    else:
+        path = input("Enter folder path for all exports: ")
+        path = path.replace("\"", "")
+        if path[-1] != "\\": # Make sure that the path ends with a slash.
+            path += "\\"
+
         file = open(data_path, "w")
-        file.write(path.replace("\"", ""))
+        file.write(f"ExportPath= {path}")
+
+        for line in file_data[1:]:
+            file.writelines("\n" + line.strip())
+
         file.close()
         export_path = path
 
