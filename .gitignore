@@ -1,6 +1,7 @@
 config.txt
 client.json
 credentials.pickle
+_ASSETS
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
