@@ -1,6 +1,6 @@
 import moviepy.editor as mpy
 import youtube_api as yt
-import os
+import os, math
 
 temp_path = "./assets/temp.mp4"
 data_path = "./assets/config.txt"
@@ -27,10 +27,28 @@ def add_image_to_audio(export_path, audio_path, image_path):
 
     # create the new video with black bars and the video created earlier
     black_bars = mpy.ImageClip("./assets/black_bars1280x720.jpg")
-    new_video = mpy.CompositeVideoClip([black_bars, exported_resized.set_position("center")])
+    new_video:mpy.CompositeVideoClip = mpy.CompositeVideoClip([black_bars, exported_resized.set_position("center")])
     new_video = new_video.set_end(exported.duration - 0.2)
     new_video.fps = 1
+    
+    # Adds the marketing tag every 30 seconds if it exists.
+    tag_paths = ("./assets/marketing_tag.mp3", "./assets/marketing_tag.wav")
+    if os.path.exists(tag_paths[0]) or os.path.exists(tag_paths[1]):
+        print("Adding marketing tags...")
+        tag_clip = mpy.AudioFileClip(tag_paths[0] if os.path.exists(tag_paths[0]) else tag_paths[1])
+        audio_with_tags = mpy.CompositeAudioClip([new_video.audio])
 
+        count = math.floor(new_video.duration / 30)
+        assert tag_clip.duration < 30
+        if 30 * count + tag_clip.duration >= new_video.duration:
+            count -= 1 # Only add the tag if we aren't extending the video duration by doing so.
+
+        for i in range(count + 1): # Add the tags beginning at 0 seconds and every 30 seconds after that.
+            audio_with_tags.clips.append(tag_clip.set_start(i * 30))
+
+        new_video.audio = audio_with_tags
+
+    print("Exporting...")
     split_path = audio_path.split("\\")
     name = split_path[len(split_path) - 1].split(".")[0]
     new_video.write_videofile(export_path + name + ".mp4", codec = "libx264", logger = None)

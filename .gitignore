@@ -1,6 +1,7 @@
 config.txt
 client.json
 credentials.pickle
+marketing_tag.wav
 _ASSETS
 
 # Byte-compiled / optimized / DLL files
